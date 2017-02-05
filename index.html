@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<title>ANGULARATTACK | HACKATHON</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- Compiled and minified CSS -->
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.29/angular.min.js"></script>
+	<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+ <style>
+    #copyright {
+      position: fixed;
+      display: block;
+      left: 0px;
+      bottom: 0;
+      margin-left: 20px;
+      margin-bottom: 50px;
+      z-index: 900;
+      color: #EEEEEE;
+      font-size: medium;
+      font-weight: bold;
+    }
+    
+    </style>
+<style type="text/css">
+/* Style Border Chrome */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(238,110,115); 
+    -webkit-border-radius: 10px;
+    border-radius: 0px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 0px;
+    background: rgb(238,110,115); 
+    -webkit-box-shadow: inset 0 0 6px rgb(238,110,115); 
+}
+::-webkit-scrollbar-track-piece:start {
+     -webkit-box-shadow: inset 0 0 6px rgb(238,110,115); 
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+   -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: rgb(238,110,115); 
+    -webkit-box-shadow: inset 0 0 6px rgb(238,110,115);
+}
+th{
+	text-transform: uppercase;
+}
+.brand-logo{
+	margin-left: 10px;
+}
+</style>
+</head>
+<body ng-controller="angularCtrl">
+
+<div class="navbar-fixed">
+    <nav>
+    <div class="nav-wrapper">
+      <a href="" class="brand-logo">ANGULAR ATTACK</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a class="waves-effect modal-trigger waves-light" href="#about">About</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">        
+      <li><a class="waves-effect modal-trigger waves-light" href="#about">About</a></li>
+      </ul>
+    </div>
+  </nav>
+  </div>
+
+<div data-ng-app="" data-ng-init="seminar=0;listening=0;speaking=0;quiz=0">
+ 	<center>
+ 	<label style="font-size: 20px;text-transform: uppercase;">Name</label>
+    <input type="text" placeholder="Enter s.o name" class="center" id="Name" ng-model="Name">
+          
+	<label style="font-size: 18px;text-transform: uppercase;">Score 1</label>
+	<input class="center" type="number" id="score1" ng-model="score1"><br />
+
+	<label style="font-size: 18px;text-transform: uppercase;">Score 2</label>
+	<input class="center" type="number" id="score2" ng-model="score2"><br />
+
+	<label style="font-size: 18px;text-transform: uppercase;">Score 3</label>
+	<input class="center" type="number" id="score3" ng-model="score3"><br />
+
+	<label style="font-size: 18px;text-transform: uppercase;">Score 4</label>
+	<input class="center" type="number" id="score4" ng-model="score4"><br />
+</center>
+</div>
+
+<center>
+	<a class="btn waves-effect waves-light" href="#save" ng-click="saveScore()">Save</a>
+	<a class="btn waves-effect waves-light" href="#reset" ng-click="cancelData()">Reset</a>
+	<a class="modal-trigger waves-effect waves-light btn" href="#result">View</a>
+</center>
+
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large pink modal-trigger waves-effect waves-light" href="#totaldetail">
+      {{total}}
+    </a> 
+    <ul>
+      <li><a class="modal-trigger btn-floating blue" href="#result"><i class="material-icons">insert_chart</i></a></li>
+    </ul>
+  </div>
+
+
+  <!-- Total Modal -->
+  <div id="totaldetail" class="modal bottom-sheet fixed">
+    <div class="modal-content">
+      <table class="highlight">
+		<thead>
+			<th class="center" style="color: #2196F3">Name</th>
+			<th class="center" style="color: #4CAF50">Score 1</th>
+			<th class="center" style="color: #FF9800">Score 2</th>
+			<th class="center" style="color: #3F51B5">Score 3</th>
+			<th class="center" style="color: #9C27B0">Score 4</th>
+			<th class="center" style="color: #FF5722">Total</th>
+			<th class="center" style="color: #FF5700">%</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="center"><b style="color: #E91E63;">{{Name}}</b></td>
+				<td class="center">{{score1}}</td>
+				<td class="center">{{score2}}</td>
+				<td class="center">{{score3}}</td>
+				<td class="center">{{score4}}</td>
+				<td class="center"><b>{{total}}</b></td>
+				<td class="center"><b>{{percent}}%</b></td>
+
+
+			</tr>
+		</tbody>
+	</table>
+	  <h1 align="center" ng-model="total">Total : {{total = score1+score2+score3+score4}}</h1>
+	  <h3 align="center" ng-model="percent">Percent : {{percent = total*4/100}}%</h3>
+    </div>
+    <div class="modal-footer">
+      <a href="#cancel" ng-click="cancelData()" class="btn-flat waves-effect waves-red modal-action modal-close">Clear</a>
+      <a href="#save" ng-click="saveScore()" class="btn-flat waves-effect waves-red modal-action modal-close">Save</a>
+    </div>
+  </div>
+
+<!-- Table Result -->
+  <div id="result" class="modal bottom-sheet fixed">
+    <div class="modal-content">
+      <table class="highlight">
+		<thead>
+			<th class="light-blue lighten-3 center">Name</th>
+			<th class=" green lighten-3 center">Score 1</th>
+			<th class="lime lighten-1 center">Score 2</th>
+			<th class=" yellow lighten-1 center">Score 3</th>
+			<th class="deep-orange lighten-3 center">Score 4</th>
+			<th class="pink lighten-5 center">Total</th>
+			<th class="pink lighten-3 center">%</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="score in Scores">
+				<td class="center"><b style="color: #E91E63;">{{score.Name}}</b></td>
+				<td class="center">{{score.score1}}</td>
+				<td class="center">{{score.score2}}</td>
+				<td class="center">{{score.score3}}</td>
+				<td class="center">{{score.score4}}</td>
+				<td class="center"><b>{{score.total}}</b></td>
+				<td class="center"><b>{{score.percent}}</b></td>
+
+			</tr>
+		</tbody>
+	</table>
+    </div>
+<div class="modal-footer">
+      <a href="#close" class="btn-flat waves-effect waves-blue modal-action modal-close">Close</a>
+    </div>
+  </div>
+
+<br />
+<table class="highlight">
+		<thead>
+			<th class="center" style="color: #2196F3">Name</th>
+			<th class="center" style="color: #4CAF50">Score 1</th>
+			<th class="center" style="color: #FF9800">Score 2</th>
+			<th class="center" style="color: #3F51B5">Score 3</th>
+			<th class="center" style="color: #9C27B0">Score 4</th>
+			<th class="center" style="color: #FF5722">Total</th>
+			<th class="center" style="color: #FF5700">%</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="score in Scores">
+				<td class="center"><b style="color: #E91E63;">{{score.Name}}</b></td>
+				<td class="center">{{score.score1}}</td>
+				<td class="center">{{score.score2}}</td>
+				<td class="center">{{score.score3}}</td>
+				<td class="center">{{score.score4}}</td>
+				<td class="center"><b>{{score.total}}</b></td>
+				<td class="center"><b>{{score.percent}}</b></td>
+
+			</tr>
+		</tbody>
+	</table>
+<script>
+	function angularCtrl($scope){
+	
+		$scope.Name = "";
+		$scope.score1 = 0;
+		$scope.score2 = 0;
+		$scope.score3 = 0;
+		$scope.score4 = 0;
+		$scope.total = 0;
+		$scope.percent = "0%";
+		$scope.Scores = {};
+		
+
+		$scope.myData = new Firebase("https://torrid-heat-2560.firebaseio.com/Scores");
+		$scope.saveScore = function(){
+			if ($scope.Name==""&&$scope.score1==""&&$scope.score2==""&&$scope.score3==""&&$scope.score4=="") {
+				Materialize.toast('Invalid input!',7000);
+			}else if($scope.Name==""){
+				Materialize.toast('Please enter any Name!',7000);
+			}else{
+ 			Materialize.toast('Saved', 4000);
+			$scope.myData.push({
+				Name:$scope.Name, 
+				score1:$scope.score1, 
+				score2:$scope.score2, 
+				score3:$scope.score3, 
+				score4:$scope.score4,
+				total:$scope.total,
+				percent:$scope.percent
+			});
+		$scope.Name = "";
+		$scope.score1 = 0;
+		$scope.score2 = 0;
+		$scope.score3 = 0;
+		$scope.score4 = 0;
+		$scope.total = 0;
+		$scope.percent = "0%";
+
+		}
+	};
+
+	$scope.cancelData = function(){
+		Materialize.toast('Cancelled!',7000);
+		$scope.Name = "";
+		$scope.score1 = 0;
+		$scope.score2 = 0;
+		$scope.score3 = 0;
+		$scope.score4 = 0;
+		$scope.total = 0;
+		$scope.percent = "0%";
+	};
+	$scope.myData.orderByChild('total').on('value', function(snapshot){
+		snapshot.forEach(function(data){
+				console.log("Total"+"="+data.val().total+"-->"+data.val().Name);
+		});
+		
+			$scope.Scores = snapshot.val();
+			$scope.$apply();
+	});
+
+
+};
+
+</script>
+ <!-- About -->
+  <div id="about" class="modal">
+    <div class="modal-content">
+      <h4>About</h4>
+      <p>I'm Sambo Chea, that is my small web application for calculate scores, that uses AngularJS, Firebase technology of Google. And Modern UI, thank to <a href="http://materializecss.com" target="_blank">Materialize</a>. Thank to Angular that make this, I'm happy that joined in this event. By <a href="https://sombochea.com">SamboChea</a>.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#close" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+<footer id="copyright">&copy 2016 | Sombo Chea</footer>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('.modal-trigger').leanModal();
+    $(".button-collapse").sideNav();
+  });
+
+</script>
+
+</body>
+</html>
